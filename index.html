@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Becoming a World-Class Data Analyst — Olalekan Akinsande</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy:       #07102b;
+  --navy-mid:   #0d1a40;
+  --navy-card:  #111f4d;
+  --navy-light: #1a2d6e;
+  --yellow:     #f5c800;
+  --white:      #ffffff;
+  --ice:        #b8ccee;
+  --muted:      #6a7faa;
+  --green:      #43d39e;
+  --teal:       #4fc3f7;
+  --orange:     #ff8a4c;
+  --purple:     #c77dff;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width:100%; height:100%; background:#000; font-family:'Barlow',sans-serif; overflow:hidden; color:var(--white); }
+
+#deck { position:relative; width:100vw; height:100vh; overflow:hidden; }
+
+/* ── SLIDES ── */
+.slide {
+  position:absolute; inset:0;
+  background:var(--navy);
+  display:flex; flex-direction:column;
+  padding:3.2vh 5.5vw 5.5vh;
+  opacity:0; transform:translateX(80px);
+  transition:opacity .5s cubic-bezier(.4,0,.2,1), transform .5s cubic-bezier(.4,0,.2,1);
+  pointer-events:none; overflow:hidden;
+}
+.slide::before { content:''; position:absolute; left:0; top:0; bottom:0; width:7px; background:var(--yellow); }
+.slide.active  { opacity:1; transform:translateX(0); pointer-events:all; }
+.slide.exit    { opacity:0; transform:translateX(-80px); }
+
+/* ── REVEAL ── */
+.r { opacity:0; transform:translateY(28px); transition:opacity .4s ease, transform .4s ease; }
+.r.show { opacity:1; transform:translateY(0); }
+
+/* ── PROGRESS ── */
+#pbar { position:fixed; bottom:0; left:0; right:0; height:5px; background:rgba(255,255,255,.07); z-index:999; }
+#pfill { height:100%; background:var(--yellow); transition:width .4s ease; }
+
+/* ── STEP DOTS ── */
+#sdots { position:fixed; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:9px; z-index:999; }
+.sd { width:8px; height:8px; border-radius:50%; background:var(--muted); transition:all .3s; }
+.sd.on   { background:var(--yellow); transform:scale(1.45); }
+.sd.done { background:rgba(245,200,0,.4); }
+
+/* ── COUNTER ── */
+#ctr { position:fixed; bottom:14px; right:22px; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:1.5px; color:var(--muted); z-index:999; }
+#ctr b { color:var(--yellow); }
+
+/* ── NAV ── */
+.nb { position:fixed; top:50%; transform:translateY(-50%); background:rgba(245,200,0,.12); border:1px solid rgba(245,200,0,.3); color:var(--yellow); width:50px; height:50px; border-radius:50%; font-size:26px; cursor:pointer; z-index:999; display:flex; align-items:center; justify-content:center; transition:background .2s, transform .2s; backdrop-filter:blur(6px); user-select:none; }
+.nb:hover { background:rgba(245,200,0,.3); transform:translateY(-50%) scale(1.1); }
+#bp { left:16px; } #bn { right:16px; }
+
+/* ── FS ── */
+#fsh { position:fixed; top:14px; right:18px; z-index:999; background:rgba(245,200,0,.12); border:1px solid rgba(245,200,0,.3); border-radius:6px; padding:7px 14px; font-size:13px; color:var(--yellow); cursor:pointer; backdrop-filter:blur(6px); }
+#fsh:hover { background:rgba(245,200,0,.25); }
+
+/* ── KB HINT ── */
+#kbh { position:fixed; top:15px; left:50%; transform:translateX(-50%); font-size:12px; color:var(--muted); z-index:999; letter-spacing:.4px; transition:opacity 1s; }
+
+/* ── SHARED TYPE ── */
+.lbl { font-family:'Barlow Condensed',sans-serif; font-size:clamp(12px,1.3vw,17px); letter-spacing:3.5px; text-transform:uppercase; color:var(--yellow); margin-bottom:8px; }
+.sh  { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,3.8vw,52px); color:var(--yellow); letter-spacing:1px; margin-bottom:clamp(12px,1.8vh,24px); display:flex; align-items:center; gap:14px; line-height:1; flex-shrink:0; }
+.card { background:var(--navy-card); border:1px solid var(--navy-light); border-radius:12px; }
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px,1.5vw,20px); }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:clamp(12px,1.5vw,18px); }
+.col { display:flex; flex-direction:column; gap:clamp(8px,1.1vh,13px); }
+
+/* ════════ SLIDE 1 ════════ */
+#s1 .T { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,8vw,108px); line-height:.93; }
+#s1 .T em { color:var(--yellow); font-style:normal; display:block; }
+#s1 .sub { font-size:clamp(17px,2.1vw,27px); color:var(--ice); font-style:italic; margin:10px 0 22px; }
+#s1 .spk { background:var(--navy-card); border:1px solid var(--navy-light); border-radius:14px; padding:clamp(16px,2vh,26px) clamp(18px,2.5vw,32px); max-width:560px; }
+#s1 .sn { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:clamp(20px,2.6vw,34px); color:var(--white); letter-spacing:1px; }
+#s1 .sr { color:var(--yellow); font-weight:700; font-size:clamp(13px,1.5vw,19px); margin:5px 0 3px; }
+#s1 .so { color:var(--ice); font-size:clamp(13px,1.3vw,17px); }
+#s1 .ev { margin-top:18px; font-family:'Barlow Condensed',sans-serif; letter-spacing:2px; font-size:clamp(12px,1.2vw,16px); color:var(--muted); }
+#s1 .deco { position:absolute; right:6vw; top:50%; transform:translateY(-50%); width:clamp(160px,20vw,280px); height:clamp(160px,20vw,280px); border-radius:50%; border:3px solid var(--yellow); background:var(--navy-mid); display:flex; align-items:center; justify-content:center; font-size:clamp(70px,10vw,140px); }
+
+/* ════════ SLIDE 2 AGENDA ════════ */
+#s2 .ai { display:flex; align-items:flex-start; gap:18px; padding:clamp(13px,1.7vh,20px) clamp(16px,2vw,24px); }
+#s2 .an { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,3.5vw,44px); color:var(--yellow); min-width:38px; line-height:1; }
+#s2 .at { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(16px,1.9vw,23px); color:var(--white); }
+#s2 .as { font-size:clamp(12px,1.2vw,15px); color:var(--muted); margin-top:3px; }
+
+/* ════════ SLIDE 3 MINDSET ════════ */
+#s3 .mr { display:flex; align-items:flex-start; gap:16px; padding:clamp(13px,1.7vh,20px) clamp(16px,2vw,24px); border-left:5px solid var(--yellow) !important; }
+#s3 .mi { font-size:clamp(24px,3vw,38px); flex-shrink:0; margin-top:2px; }
+#s3 .mt { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,24px); color:var(--white); }
+#s3 .mb { font-size:clamp(13px,1.3vw,17px); color:var(--ice); margin-top:4px; line-height:1.5; }
+#s3 .qb { padding:clamp(18px,2.2vh,28px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; }
+#s3 .qi { font-size:clamp(40px,5.5vw,72px); margin-bottom:12px; }
+#s3 .qt { font-style:italic; font-size:clamp(14px,1.6vw,20px); color:var(--white); line-height:1.6; }
+#s3 .qa { margin-top:12px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(13px,1.3vw,17px); color:var(--yellow); }
+
+/* ════════ SLIDE 4 TOOLS ════════ */
+#s4 .tc { border-radius:12px; overflow:hidden; border:1px solid var(--navy-light); }
+#s4 .th { padding:clamp(10px,1.3vh,15px) clamp(16px,2vw,22px); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:clamp(16px,1.8vw,22px); color:var(--navy); }
+#s4 .tb { background:var(--navy-card); padding:clamp(10px,1.3vh,16px) clamp(16px,2vw,22px); display:flex; flex-direction:column; gap:7px; }
+#s4 .ti { font-size:clamp(14px,1.4vw,18px); color:var(--ice); display:flex; align-items:center; gap:10px; }
+#s4 .ti::before { content:'▸'; color:var(--yellow); font-size:12px; flex-shrink:0; }
+
+/* ════════ SLIDE 5 FRAMEWORK ════════ */
+#s5 .sw { display:flex; gap:clamp(6px,.9vw,12px); flex:1; min-height:0; align-items:stretch; }
+#s5 .sc { flex:1; padding:clamp(12px,1.5vh,20px) clamp(10px,1.1vw,16px); display:flex; flex-direction:column; align-items:center; text-align:center; gap:9px; }
+#s5 .sn2 { width:clamp(40px,4.5vw,60px); height:clamp(40px,4.5vw,60px); border-radius:50%; background:var(--yellow); color:var(--navy); font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,2.8vw,36px); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+#s5 .stit { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(13px,1.4vw,19px); color:var(--white); }
+#s5 .sbod { font-size:clamp(11px,1.1vw,14px); color:var(--ice); line-height:1.5; }
+#s5 .sarr { color:var(--yellow); font-size:clamp(20px,2.5vw,34px); align-self:center; flex-shrink:0; }
+#s5 .tip { margin-top:14px; flex-shrink:0; background:var(--navy-light); border-radius:10px; padding:clamp(10px,1.2vh,14px) clamp(16px,2vw,22px); font-size:clamp(13px,1.3vw,17px); color:var(--yellow); font-style:italic; }
+
+/* ════════ SLIDE 6 CAREER ════════ */
+#s6 .cc { border-radius:12px; overflow:hidden; border:2px solid var(--navy-light); display:flex; flex-direction:column; }
+#s6 .ch { padding:clamp(10px,1.3vh,17px); font-family:'Barlow Condensed',sans-serif; font-weight:800; color:var(--navy); text-align:center; }
+#s6 .cl { font-size:clamp(18px,2.2vw,28px); }
+#s6 .cr2 { font-size:clamp(12px,1.2vw,15px); opacity:.85; }
+#s6 .cb { background:var(--navy-card); padding:clamp(11px,1.3vh,17px) clamp(14px,1.8vw,22px); flex:1; display:flex; flex-direction:column; gap:10px; }
+#s6 .csk { display:flex; align-items:flex-start; gap:10px; font-size:clamp(13px,1.3vw,17px); color:var(--ice); }
+#s6 .cd { width:10px; height:10px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+#s6 .cn { margin-top:14px; flex-shrink:0; background:var(--navy-light); border-radius:10px; padding:clamp(10px,1.2vh,14px); font-size:clamp(13px,1.3vw,17px); color:var(--yellow); font-style:italic; text-align:center; }
+
+/* ════════ SLIDE 7 BRAND ════════ */
+#s7 .br2 { display:flex; align-items:flex-start; gap:16px; padding:clamp(13px,1.7vh,20px) clamp(16px,2vw,24px); }
+#s7 .bi { font-size:clamp(24px,3vw,38px); flex-shrink:0; margin-top:2px; }
+#s7 .bt { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(17px,1.9vw,23px); color:var(--white); }
+#s7 .bb { font-size:clamp(13px,1.3vw,16px); color:var(--ice); margin-top:4px; line-height:1.5; }
+#s7 .stc { padding:clamp(14px,1.8vh,22px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:1px solid var(--yellow) !important; }
+#s7 .sv { font-family:'Bebas Neue',sans-serif; font-size:clamp(34px,5vw,68px); color:var(--yellow); line-height:1; }
+#s7 .sl { font-size:clamp(12px,1.2vw,15px); color:var(--ice); margin-top:6px; }
+
+/* ════════ SLIDE 8 — ROADMAP ════════ */
+#s8 .roadmap-wrap {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(10px,1.2vw,16px);
+  flex:1; min-height:0;
+}
+#s8 .rm-card { border-radius:12px; overflow:hidden; border:1px solid var(--navy-light); display:flex; flex-direction:column; }
+#s8 .rm-head { padding:clamp(9px,1.1vh,14px) clamp(12px,1.5vw,18px); font-family:'Barlow Condensed',sans-serif; font-weight:800; color:var(--navy); }
+#s8 .rm-phase { font-size:clamp(11px,1.1vw,13px); opacity:.8; font-weight:600; }
+#s8 .rm-title { font-size:clamp(15px,1.7vw,21px); line-height:1.1; }
+#s8 .rm-body { background:var(--navy-card); padding:clamp(10px,1.2vh,15px) clamp(12px,1.5vw,18px); flex:1; display:flex; flex-direction:column; gap:7px; }
+#s8 .rm-item { display:flex; align-items:flex-start; gap:9px; font-size:clamp(12px,1.2vw,15px); color:var(--ice); line-height:1.4; }
+#s8 .rm-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+#s8 .rm-tip { font-size:clamp(11px,1.1vw,13px); color:var(--yellow); font-style:italic; margin-top:auto; padding-top:6px; }
+#s8 .rm-link { font-size:clamp(11px,1.1vw,13px); margin-top:14px; flex-shrink:0; background:var(--navy-light); border-radius:8px; padding:clamp(8px,1vh,12px) clamp(12px,1.5vw,18px); display:flex; align-items:center; gap:10px; }
+#s8 .rm-link a { color:var(--yellow); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(13px,1.3vw,16px); text-decoration:none; }
+#s8 .rm-link a:hover { text-decoration:underline; }
+
+/* ════════ SLIDE 9 — VIDEO RESOURCES ════════ */
+#s9 .res-wrap { display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,1.8vw,24px); flex:1; min-height:0; }
+#s9 .vid-side { display:flex; flex-direction:column; gap:12px; }
+#s9 .vid-frame { flex:1; border-radius:12px; overflow:hidden; min-height:0; }
+#s9 .vid-frame iframe { width:100%; height:100%; border:none; display:block; }
+#s9 .vid-caption { font-size:clamp(12px,1.2vw,15px); color:var(--muted); font-style:italic; }
+#s9 .res-links { display:flex; flex-direction:column; gap:clamp(9px,1.1vh,14px); }
+#s9 .rl { display:flex; align-items:flex-start; gap:14px; padding:clamp(12px,1.5vh,18px) clamp(14px,1.8vw,22px); text-decoration:none; transition:border-color .25s, background .25s; }
+#s9 .rl:hover { border-color:var(--yellow); background:var(--navy-light); }
+#s9 .rl-icon { font-size:clamp(22px,2.8vw,34px); flex-shrink:0; margin-top:2px; }
+#s9 .rl-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(15px,1.7vw,21px); color:var(--yellow); }
+#s9 .rl-desc  { font-size:clamp(12px,1.2vw,15px); color:var(--ice); margin-top:3px; line-height:1.4; }
+
+/* ════════ SLIDE 10 CLOSE ════════ */
+#s10 .ct { font-family:'Bebas Neue',sans-serif; font-size:clamp(32px,5.5vw,76px); line-height:1; }
+#s10 .ct em { color:var(--yellow); font-style:normal; }
+#s10 .div2 { width:90px; height:6px; background:var(--yellow); border-radius:3px; margin:16px 0 12px; flex-shrink:0; }
+#s10 .tgl { font-style:italic; font-size:clamp(15px,1.8vw,23px); color:var(--ice); margin-bottom:24px; }
+#s10 .crow { display:flex; gap:clamp(14px,2vw,22px); flex-wrap:wrap; margin-top:auto; }
+#s10 .ccard { flex:1; min-width:200px; background:var(--navy-card); border:1px solid var(--navy-light); border-radius:14px; padding:clamp(14px,1.8vh,22px) clamp(16px,2vw,26px); display:flex; align-items:center; gap:16px; text-decoration:none; transition:border-color .25s, background .25s; }
+#s10 .ccard:hover { border-color:var(--yellow); background:var(--navy-light); }
+#s10 .ci2 { font-size:clamp(28px,3.5vw,46px); flex-shrink:0; }
+#s10 .cl2 { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:clamp(15px,1.7vw,21px); color:var(--yellow); letter-spacing:.5px; }
+#s10 .cu  { font-size:clamp(12px,1.1vw,15px); color:var(--ice); margin-top:3px; }
+#s10 .trophy { position:absolute; right:5vw; top:50%; transform:translateY(-50%); font-size:clamp(90px,13vw,170px); opacity:.85; pointer-events:none; }
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ═══════════════ SLIDE 1: TITLE ═══════════════ -->
+<section class="slide active" id="s1">
+  <div class="lbl r show">The Radiating Church · Mentorship &amp; Expert Webinar</div>
+  <div class="T r">BECOMING A<br><em>WORLD-CLASS<br>DATA ANALYST</em></div>
+  <div class="sub r">Mindset · Tools · Career Strategy</div>
+  <div class="spk r">
+    <div class="sn">OLALEKAN AKINSANDE</div>
+    <div class="sr">Artificial Intelligence Engineer</div>
+    <div class="so">Lead, Strategic Insights · Mastercard Foundation</div>
+  </div>
+  <div class="ev r">Wednesday · 7PM · April 22, 2026</div>
+  <div class="deco">📊</div>
+</section>
+
+<!-- ═══════════════ SLIDE 2: AGENDA ═══════════════ -->
+<section class="slide" id="s2">
+  <div class="sh r show">📋 AGENDA</div>
+  <div class="g2" style="flex:1; align-content:start; gap:clamp(10px,1.4vh,18px);">
+    <div class="card ai r"><div class="an">01</div><div><div class="at">The Mindset Shift</div><div class="as">How world-class analysts think differently</div></div></div>
+    <div class="card ai r"><div class="an">05</div><div><div class="at">Building Your Brand</div><div class="as">Standing out in a crowded market</div></div></div>
+    <div class="card ai r"><div class="an">02</div><div><div class="at">Essential Tools &amp; Skills</div><div class="as">The modern data analyst's tech stack</div></div></div>
+    <div class="card ai r"><div class="an">06</div><div><div class="at">90-Day Roadmap</div><div class="as">Free resources to get you started</div></div></div>
+    <div class="card ai r"><div class="an">03</div><div><div class="at">Analytical Thinking Framework</div><div class="as">Structuring your approach to problems</div></div></div>
+    <div class="card ai r"><div class="an">07</div><div><div class="at">Video &amp; Resources</div><div class="as">Watch, learn, and connect</div></div></div>
+    <div class="card ai r"><div class="an">04</div><div><div class="at">Career Strategy</div><div class="as">Building your path to the top</div></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ SLIDE 3: MINDSET ═══════════════ -->
+<section class="slide" id="s3">
+  <div class="sh r show">🧠 01 · THE MINDSET SHIFT</div>
+  <div style="display:grid; grid-template-columns:1fr 310px; gap:clamp(12px,1.5vw,20px); flex:1; min-height:0;">
+    <div class="col">
+      <div class="card mr r"><div class="mi">🔍</div><div><div class="mt">Curiosity First</div><div class="mb">Ask 'why' before 'what'. The best analysts are driven by questions, not just queries.</div></div></div>
+      <div class="card mr r"><div class="mi">💼</div><div><div class="mt">Business Acumen</div><div class="mb">Data without context is noise. Understand the business before the dataset.</div></div></div>
+      <div class="card mr r"><div class="mi">📖</div><div><div class="mt">Storytelling &gt; Stats</div><div class="mb">Your insight is only as powerful as your ability to communicate it clearly.</div></div></div>
+      <div class="card mr r"><div class="mi">📈</div><div><div class="mt">Continuous Learning</div><div class="mb">The tools change. Your commitment to learning is the real competitive edge.</div></div></div>
+    </div>
+    <div class="card qb r">
+      <div class="qi">💡</div>
+      <div class="qt">"The goal is to turn data into information, and information into insight."</div>
+      <div class="qa">— Carly Fiorina</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SLIDE 4: TOOLS ═══════════════ -->
+<section class="slide" id="s4">
+  <div class="sh r show">🛠 02 · ESSENTIAL TOOLS &amp; SKILLS</div>
+  <div class="g2" style="flex:1; min-height:0;">
+    <div class="tc r"><div class="th" style="background:var(--teal);">Data Wrangling</div><div class="tb"><div class="ti">SQL</div><div class="ti">Python / Pandas</div><div class="ti">Excel / Power Query</div><div class="ti">dbt</div></div></div>
+    <div class="tc r"><div class="th" style="background:var(--green);">Visualization</div><div class="tb"><div class="ti">Power BI</div><div class="ti">Tableau</div><div class="ti">Matplotlib / Seaborn</div><div class="ti">Looker</div></div></div>
+    <div class="tc r"><div class="th" style="background:var(--orange);">Statistics &amp; ML</div><div class="tb"><div class="ti">Descriptive Stats</div><div class="ti">Regression Models</div><div class="ti">A/B Testing</div><div class="ti">scikit-learn</div></div></div>
+    <div class="tc r"><div class="th" style="background:var(--purple);">Communication</div><div class="tb"><div class="ti">Storytelling with Data</div><div class="ti">Executive Dashboards</div><div class="ti">Slide Decks</div><div class="ti">Data Memos</div></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ SLIDE 5: FRAMEWORK ═══════════════ -->
+<section class="slide" id="s5">
+  <div class="sh r show">🔎 03 · ANALYTICAL THINKING FRAMEWORK</div>
+  <div class="sw">
+    <div class="card sc r"><div class="sn2">1</div><div class="stit">Define the Question</div><div class="sbod">What business problem are we solving? Who needs this answer?</div></div>
+    <div class="sarr r">›</div>
+    <div class="card sc r"><div class="sn2">2</div><div class="stit">Gather &amp; Validate Data</div><div class="sbod">Source the right data. Check quality, completeness, and bias.</div></div>
+    <div class="sarr r">›</div>
+    <div class="card sc r"><div class="sn2">3</div><div class="stit">Explore &amp; Analyze</div><div class="sbod">EDA first. Let patterns emerge before jumping to conclusions.</div></div>
+    <div class="sarr r">›</div>
+    <div class="card sc r"><div class="sn2">4</div><div class="stit">Interpret &amp; Synthesize</div><div class="sbod">What does this mean for the business? What's the "so what"?</div></div>
+    <div class="sarr r">›</div>
+    <div class="card sc r"><div class="sn2">5</div><div class="stit">Communicate &amp; Act</div><div class="sbod">Tailor your output to the audience. Drive decisions, not just reports.</div></div>
+  </div>
+  <div class="tip r">💡 Great analysts cycle through these steps repeatedly — analysis is rarely linear.</div>
+</section>
+
+<!-- ═══════════════ SLIDE 6: CAREER ═══════════════ -->
+<section class="slide" id="s6">
+  <div class="sh r show">🚀 04 · CAREER STRATEGY</div>
+  <div class="g3" style="flex:1; min-height:0;">
+    <div class="cc r" style="border-color:var(--green);">
+      <div class="ch" style="background:var(--green);"><div class="cl">ENTRY</div><div class="cr2">Junior Analyst</div></div>
+      <div class="cb">
+        <div class="csk"><div class="cd" style="background:var(--green);"></div><span>Excel &amp; SQL proficiency</span></div>
+        <div class="csk"><div class="cd" style="background:var(--green);"></div><span>Learn Power BI / Tableau</span></div>
+        <div class="csk"><div class="cd" style="background:var(--green);"></div><span>Build a portfolio (3–5 projects)</span></div>
+        <div class="csk"><div class="cd" style="background:var(--green);"></div><span>Certifications (Google, Microsoft)</span></div>
+      </div>
+    </div>
+    <div class="cc r" style="border-color:var(--teal);">
+      <div class="ch" style="background:var(--teal);"><div class="cl">MID</div><div class="cr2">Analyst / Sr. Analyst</div></div>
+      <div class="cb">
+        <div class="csk"><div class="cd" style="background:var(--teal);"></div><span>Python for automation</span></div>
+        <div class="csk"><div class="cd" style="background:var(--teal);"></div><span>Advanced dashboarding</span></div>
+        <div class="csk"><div class="cd" style="background:var(--teal);"></div><span>Stakeholder management</span></div>
+        <div class="csk"><div class="cd" style="background:var(--teal);"></div><span>Industry domain expertise</span></div>
+      </div>
+    </div>
+    <div class="cc r" style="border-color:var(--orange);">
+      <div class="ch" style="background:var(--orange);"><div class="cl">LEAD</div><div class="cr2">Lead / Principal Analyst</div></div>
+      <div class="cb">
+        <div class="csk"><div class="cd" style="background:var(--orange);"></div><span>Strategy &amp; roadmap ownership</span></div>
+        <div class="csk"><div class="cd" style="background:var(--orange);"></div><span>Cross-functional influence</span></div>
+        <div class="csk"><div class="cd" style="background:var(--orange);"></div><span>Mentoring junior analysts</span></div>
+        <div class="csk"><div class="cd" style="background:var(--orange);"></div><span>ML &amp; predictive modeling</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="cn r">Progression is about depth of impact, not just years of experience.</div>
+</section>
+
+<!-- ═══════════════ SLIDE 7: BRAND ═══════════════ -->
+<section class="slide" id="s7">
+  <div class="sh r show">⭐ 05 · BUILDING YOUR BRAND</div>
+  <div style="display:grid; grid-template-columns:1fr 280px; gap:clamp(12px,1.5vw,20px); flex:1; min-height:0;">
+    <div class="col">
+      <div class="card br2 r"><div class="bi">👥</div><div><div class="bt">Build in Public</div><div class="bb">Share projects on GitHub, LinkedIn, and X. Document your learning journey openly.</div></div></div>
+      <div class="card br2 r"><div class="bi">🎯</div><div><div class="bt">Niche Down</div><div class="bb">Pick an industry — fintech, health, education, development — and own that space.</div></div></div>
+      <div class="card br2 r"><div class="bi">✍️</div><div><div class="bt">Create Content</div><div class="bb">Write articles, record walkthroughs, post dashboard screenshots. Teach what you know.</div></div></div>
+      <div class="card br2 r"><div class="bi">🕸</div><div><div class="bt">Network Strategically</div><div class="bb">Attend meetups, conferences, communities like DataFest Africa. Be present online.</div></div></div>
+    </div>
+    <div class="col">
+      <div class="card stc r" style="flex:1;"><div class="sv">85%</div><div class="sl">of analyst roles filled through networks</div></div>
+      <div class="card stc r" style="flex:1;"><div class="sv">3×</div><div class="sl">more interviews with a public portfolio</div></div>
+      <div class="card stc r" style="flex:1;"><div class="sv">10K</div><div class="sl">followers = inbound opportunities</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SLIDE 8: 90-DAY ROADMAP ═══════════════ -->
+<section class="slide" id="s8">
+  <div class="sh r show">🗺 06 · 90-DAY DATA ANALYST ROADMAP</div>
+  <div class="roadmap-wrap">
+
+    <div class="rm-card r" style="border-color:var(--teal);">
+      <div class="rm-head" style="background:var(--teal);">
+        <div class="rm-phase">Days 1–12</div>
+        <div class="rm-title">Step 1 · Excel / Spreadsheets</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rm-dot" style="background:var(--teal);"></div><span>Master data cleaning &amp; analysis in Excel</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--teal);"></div><span>Learn pivot tables, VLOOKUP, Power Query</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--teal);"></div><span>Build a sales dashboard or expense tracker</span></div>
+        <div class="rm-tip">💡 Project: Personal expense dashboard</div>
+      </div>
+    </div>
+
+    <div class="rm-card r" style="border-color:var(--purple);">
+      <div class="rm-head" style="background:var(--purple);">
+        <div class="rm-phase">Days 13–15</div>
+        <div class="rm-title">Step 2 · Basic Statistics</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rm-dot" style="background:var(--purple);"></div><span>Mean, median, mode, standard deviation</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--purple);"></div><span>Distributions &amp; probability basics</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--purple);"></div><span>Apply stats to real datasets</span></div>
+        <div class="rm-tip">💡 Foundation for everything else</div>
+      </div>
+    </div>
+
+    <div class="rm-card r" style="border-color:var(--green);">
+      <div class="rm-head" style="background:var(--green);">
+        <div class="rm-phase">Days 16–35</div>
+        <div class="rm-title">Step 3 · Power BI / Tableau</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rm-dot" style="background:var(--green);"></div><span>Build interactive dashboards</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--green);"></div><span>Visualize COVID-19 or public datasets</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--green);"></div><span>Pursue Microsoft Power BI certification</span></div>
+        <div class="rm-tip">💡 Project: COVID-19 trend dashboard</div>
+      </div>
+    </div>
+
+    <div class="rm-card r" style="border-color:var(--orange);">
+      <div class="rm-head" style="background:var(--orange);">
+        <div class="rm-phase">Days 36–55</div>
+        <div class="rm-title">Step 4 · SQL</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rm-dot" style="background:var(--orange);"></div><span>Query and manipulate databases</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--orange);"></div><span>Joins, aggregations, subqueries</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--orange);"></div><span>Analyse customer behavior data</span></div>
+        <div class="rm-tip">💡 Project: e-commerce customer analysis</div>
+      </div>
+    </div>
+
+    <div class="rm-card r" style="border-color:var(--yellow);">
+      <div class="rm-head" style="background:var(--yellow);">
+        <div class="rm-phase">Days 56–75</div>
+        <div class="rm-title">Step 5 · Python</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rm-dot" style="background:var(--yellow);"></div><span>Pandas, NumPy for data analysis</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--yellow);"></div><span>Matplotlib / Seaborn for charts</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:var(--yellow);"></div><span>Clean messy datasets from Kaggle</span></div>
+        <div class="rm-tip">💡 Project: Kaggle dataset analysis</div>
+      </div>
+    </div>
+
+    <div class="rm-card r" style="border-color:#a78bfa;">
+      <div class="rm-head" style="background:#a78bfa;">
+        <div class="rm-phase">Days 76–90</div>
+        <div class="rm-title">Step 6 · Portfolio &amp; Launch</div>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rm-dot" style="background:#a78bfa;"></div><span>Host projects on GitHub</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:#a78bfa;"></div><span>Complete free virtual internships (Forage)</span></div>
+        <div class="rm-item"><div class="rm-dot" style="background:#a78bfa;"></div><span>Apply to roles &amp; reach out to analysts</span></div>
+        <div class="rm-tip">💡 39 project ideas on the full guide ↓</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="rm-link r">
+    <span>📖</span>
+    <span>Full free guide with all tutorials &amp; resources:</span>
+    <a href="https://lekanakinsande.com/how-to-become-a-data-analyst-in-2025-using-free-resources" target="_blank">lekanakinsande.com → Free Roadmap</a>
+  </div>
+</section>
+
+<!-- ═══════════════ SLIDE 9: VIDEO + RESOURCES ═══════════════ -->
+<section class="slide" id="s9">
+  <div class="sh r show">🎬 07 · WATCH, LEARN &amp; CONNECT</div>
+  <div class="res-wrap">
+
+    <div class="vid-side r">
+      <div class="vid-frame">
+        <iframe src="https://www.youtube.com/embed/_rwf_XNqU5M?si=kkcWbOykkv31uz0e"
+          title="FASTEST Way To Become A Data Analyst"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="vid-caption">▶ FASTEST Way To Become A Data Analyst — by Lekan Akinsande</div>
+    </div>
+
+    <div class="res-links r">
+      <a class="card rl" href="https://lekanakinsande.com/how-to-become-a-data-analyst-in-2025-using-free-resources" target="_blank">
+        <div class="rl-icon">📖</div>
+        <div>
+          <div class="rl-title">Full 90-Day Free Roadmap</div>
+          <div class="rl-desc">Step-by-step guide with free tutorials, projects, and virtual internships — all free.</div>
+        </div>
+      </a>
+      <a class="card rl" href="https://lekanakinsande.com" target="_blank">
+        <div class="rl-icon">🌐</div>
+        <div>
+          <div class="rl-title">lekanakinsande.com</div>
+          <div class="rl-desc">Data &amp; analytics articles, personal development tips, and growth resources.</div>
+        </div>
+      </a>
+      <a class="card rl" href="https://www.theforage.com/simulations?careers=data" target="_blank">
+        <div class="rl-icon">💼</div>
+        <div>
+          <div class="rl-title">Free Virtual Internships</div>
+          <div class="rl-desc">Hands-on data projects from top companies via Forage — great for your CV.</div>
+        </div>
+      </a>
+      <a class="card rl" href="https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/" target="_blank">
+        <div class="rl-icon">🏅</div>
+        <div>
+          <div class="rl-title">Microsoft Power BI Certification</div>
+          <div class="rl-desc">Earn the PL-300 certification to validate your Power BI skills officially.</div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ SLIDE 10: CLOSE ═══════════════ -->
+<section class="slide" id="s10">
+  <div class="ct r show">The world doesn't need<br>more data.</div>
+  <div class="ct r"><em>It needs more analysts<br>who can make sense of it.</em></div>
+  <div class="div2 r"></div>
+  <div class="tgl r">Your journey to world-class starts today.</div>
+  <div class="crow r">
+    <a class="ccard" href="https://lekanakinsande.com" target="_blank">
+      <div class="ci2">🌐</div>
+      <div><div class="cl2">Website &amp; Resources</div><div class="cu">lekanakinsande.com</div></div>
+    </a>
+    <a class="ccard" href="https://www.linkedin.com/in/akinsande-olalekan/" target="_blank">
+      <div class="ci2">💼</div>
+      <div><div class="cl2">Connect on LinkedIn</div><div class="cu">linkedin.com/in/akinsande-olalekan</div></div>
+    </a>
+  </div>
+  <div class="trophy">🏆</div>
+</section>
+
+</div><!-- /deck -->
+
+<div id="pbar"><div id="pfill"></div></div>
+<button class="nb" id="bp" title="Back (←)">‹</button>
+<button class="nb" id="bn" title="Next (→ / Space)">›</button>
+<div id="sdots"></div>
+<div id="ctr">Slide <b id="cs">1</b> / <b id="ts"></b></div>
+<div id="fsh" onclick="toggleFS()">⛶ Fullscreen</div>
+<div id="kbh">→ or Space to advance &nbsp;·&nbsp; ← to go back &nbsp;·&nbsp; F for fullscreen</div>
+
+<script>
+const SLIDES = Array.from(document.querySelectorAll('.slide'));
+const N = SLIDES.length;
+document.getElementById('ts').textContent = N;
+const REVS = SLIDES.map(s => Array.from(s.querySelectorAll('.r')));
+let si = 0, ri = 0, busy = false;
+
+function initSlide(idx, all) {
+  REVS[idx].forEach(el => {
+    if (all || el.classList.contains('show')) el.classList.add('show');
+    else el.classList.remove('show');
+  });
+  ri = all ? REVS[idx].length : REVS[idx].filter(el => el.classList.contains('show')).length;
+}
+
+function buildDots(idx) {
+  const c = document.getElementById('sdots');
+  c.innerHTML = '';
+  REVS[idx].forEach(() => { const d = document.createElement('div'); d.className = 'sd'; c.appendChild(d); });
+}
+
+function updateDots() {
+  document.querySelectorAll('.sd').forEach((d,i) => {
+    d.classList.remove('on','done');
+    if (i < ri-1) d.classList.add('done');
+    else if (i === ri-1) d.classList.add('on');
+  });
+}
+
+function totalSteps() { return REVS.reduce((a,r) => a+r.length, 0); }
+function doneSteps()  { let c=0; for(let i=0;i<si;i++) c+=REVS[i].length; return c+ri; }
+
+function updateUI() {
+  document.getElementById('pfill').style.width = (doneSteps()/totalSteps()*100)+'%';
+  document.getElementById('cs').textContent = si+1;
+  updateDots();
+}
+
+function advance() {
+  if (busy) return;
+  if (ri < REVS[si].length) {
+    REVS[si][ri].classList.add('show'); ri++; updateUI();
+  } else if (si < N-1) {
+    busy = true;
+    const prev = si; si++;
+    SLIDES[prev].classList.remove('active'); SLIDES[prev].classList.add('exit');
+    REVS[si].forEach(el => el.classList.remove('show'));
+    SLIDES[si].classList.add('active');
+    initSlide(si, false);
+    buildDots(si); updateUI();
+    setTimeout(() => { SLIDES[prev].classList.remove('exit'); busy = false; }, 560);
+  }
+}
+
+function goBack() {
+  if (busy) return;
+  if (ri > 1) {
+    ri--; REVS[si][ri].classList.remove('show'); updateUI();
+  } else if (si > 0) {
+    busy = true;
+    const prev = si; si--;
+    SLIDES[prev].classList.remove('active'); SLIDES[prev].classList.add('exit');
+    initSlide(si, true);
+    SLIDES[si].classList.add('active');
+    buildDots(si); updateUI();
+    setTimeout(() => { SLIDES[prev].classList.remove('exit'); busy = false; }, 560);
+  }
+}
+
+document.getElementById('bn').addEventListener('click', e => { e.stopPropagation(); advance(); });
+document.getElementById('bp').addEventListener('click', e => { e.stopPropagation(); goBack(); });
+document.addEventListener('keydown', e => {
+  if ([' ','ArrowRight','PageDown'].includes(e.key)) { e.preventDefault(); advance(); }
+  if (['ArrowLeft','Backspace','PageUp'].includes(e.key)) { e.preventDefault(); goBack(); }
+  if (e.key==='f'||e.key==='F') toggleFS();
+});
+document.getElementById('deck').addEventListener('click', e => {
+  if (!e.target.closest('.nb')&&!e.target.closest('#fsh')&&!e.target.closest('a')&&!e.target.closest('iframe')) advance();
+});
+let tx=0;
+document.addEventListener('touchstart', e => { tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend', e => { const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50) dx<0?advance():goBack(); });
+function toggleFS() { if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }
+
+// Boot
+buildDots(0); initSlide(0, false); updateUI();
+setTimeout(() => { const h=document.getElementById('kbh'); h.style.opacity='0'; }, 5000);
+</script>
+</body>
+</html>
